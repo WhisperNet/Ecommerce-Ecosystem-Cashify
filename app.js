@@ -19,6 +19,7 @@ const { isValidUser } = require('./utils/middleware.js');
 const { isValidTransaction } = require('./utils/middleware.js');
 const { initiateTransaction, initiateDummyTransaction, showTransactions } = require('./controllers/transaction');
 const mongooseSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 
 app.engine('ejs', ejsmate);
 app.set('view engine', 'ejs');
