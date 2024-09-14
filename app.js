@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -14,14 +18,19 @@ const catchAsync = require('./utils/catchAsync.js');
 const { isValidUser } = require('./utils/middleware.js');
 const { isValidTransaction } = require('./utils/middleware.js');
 const { initiateTransaction, initiateDummyTransaction, showTransactions } = require('./controllers/transaction');
-
+const mongooseSanitize = require('express-mongo-sanitize');
 
 app.engine('ejs', ejsmate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongooseSanitize());
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
 
-mongoose.connect('mongodb://localhost:27017/cashify', { useNewUrlParser: true, useUnifiedTopology: true })
+const mongoUrl = process.env.mongoUrl || 'mongodb://localhost:27017/cashify';
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Database connected');
     })
@@ -33,13 +42,18 @@ mongoose.connect('mongodb://localhost:27017/cashify', { useNewUrlParser: true, u
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'your secret key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/cashify',
+        mongoUrl: mongoUrl,
         collectionName: 'sessions'
-    })
+    }),
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
