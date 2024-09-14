@@ -1,0 +1,21 @@
+<% layout('boilerplate/boilerplate') %>
+
+    <% for(t of user.transactions) {%>
+        <div class="card mx-auto <%= user.username==t.sender?" border-danger":"border-success" %> mb-3"
+            style="max-width:
+            35rem;">
+            <div class="card-header">
+                <%= user.username==t.sender?"Cash Out":"Cash In" %>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Amount: <%= t.amount %>
+                </h5>
+                <p class="card-text">Sender: <%= t.sender %>
+                </p>
+                <p class="card-text">Reciever: <%= t.reciever %>
+                </p>
+                <p class="card-text">Time: <%= t.date %>
+                </p>
+            </div>
+        </div>
+        <% } %>

@@ -1,0 +1,58 @@
+<% layout('boilerplate/boilerplate') %>
+
+    <div class="card mb-3">
+        <img src="https://images.unsplash.com/photo-1589190632370-dcc9388aab4b?q=80&w=2040&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            class="card-img-top" alt="image of a bank">
+        <div class="card-body text-center">
+            <h5 class="card-title">Account ID:<%= user._id %>
+            </h5>
+            <h5 class="card-title">Username: <%= user.username %>
+            </h5>
+            <h5 class="card-title d-inline-block">Balance: <%= user.balance %>
+            </h5>
+            <form class="d-inline-block" action="/balance" method="post"><button
+                    class="btn btn-outline-dark ms-2">+</button></form>
+            <p class="card-text">Please Don't share the below OTP with anyone. Only use it to confirm your transactions
+            </p>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Get OTP
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Your OTP</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="text-center" id="text-to-copy">
+                                <%= user.otp %>
+                            </h1>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="copy-button">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('copy-button').addEventListener('click', function () {
+            var textToCopy = document.getElementById('text-to-copy').innerText;
+            var tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        });
+    </script>
