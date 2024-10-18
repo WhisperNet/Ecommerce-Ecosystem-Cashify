@@ -20,8 +20,9 @@ module.exports.initiateTransaction = async (req, res) => {
     const transaction = new Transaction(req.body);
     const sender = await User.findOne({ username: req.body.sender })
     const reciever = await User.findOne({ username: req.body.reciever })
+    console.log(req.body)
     if (!sender || !reciever) {
-        res.status(400).json({ response: 'Invalid sender or reciever' });
+        return res.status(400).json({ response: 'Invalid sender or reciever' });
     }
     if (sender.otp !== Number(req.body.otp)) {
         res.status(400).json({ response: 'Invalid OTP' });

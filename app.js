@@ -20,6 +20,7 @@ const { isValidTransaction } = require('./utils/middleware.js');
 const { initiateTransaction, initiateDummyTransaction, showTransactions } = require('./controllers/transaction');
 const mongooseSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const ExpressError = require('./utils/error.js');
 
 app.engine('ejs', ejsmate);
 app.set('view engine', 'ejs');
@@ -80,7 +81,7 @@ app.get('/dashboard', isLoggedIn, async (req, res) => {
 app.get('/register', renderRegister);
 app.post('/register', isValidUser, catchAsync(register));
 app.get('/login', renderLogin);
-app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), login);
+app.post('/login', passport.authenticate('local', { /*failureFlash: true,*/ failureRedirect: '/login' }), login);
 app.get('/logout', logout);
 
 app.get('/transactions', isLoggedIn, catchAsync(showTransactions))
