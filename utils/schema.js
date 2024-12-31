@@ -4,7 +4,8 @@ module.exports.transactionSchema = Joi.object({
     amount: Joi.number().required().min(0),
     sender: Joi.string().required(),
     reciever: Joi.string().required(),
-    otp: Joi.number().required().min(1000).max(9999)
+    otp: Joi.number().min(1000).max(9999),
+    adminAuth: Joi.string()
 })
 
 module.exports.userSchema = Joi.object({
