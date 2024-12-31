@@ -1,6 +1,6 @@
 const User = require('../models/user.js');
 const Transaction = require('../models/transaction.js');
-
+const { ObjectId } = require('mongoose').Types;
 
 module.exports.initiateDummyTransaction = async (req, res) => {
     const user = await User.findById(req.user._id);
@@ -43,5 +43,24 @@ module.exports.initiateTransaction = async (req, res) => {
         await sender.save();
         await reciever.save();
         res.status(200).json({ response: 'Transaction successful' });
+    }
+}
+
+module.exports.verifyUser = async (req, res) => {
+    const { cashifyUsername, id } = req.body;
+    console.log(cashifyUsername, id);
+    if (!cashifyUsername && !id) {
+        return res.status(400).json({ response: 'Invalid request' });
+    }
+    try {
+        const foundUser = await User.findById(new ObjectId(id));
+        if (foundUser.username === cashifyUsername) {
+            res.status(200).json({ response: 'User verified' });
+        } else {
+            res.status(400).json({ response: 'Something went wrong while verifying your bank account' });
+        }
+    } catch (error) {
+        return res.status(400).json({ response: 'Invalid request' });
+
     }
 }

@@ -17,7 +17,7 @@ const { renderLogin, renderRegister, login, register, logout } = require('./cont
 const catchAsync = require('./utils/catchAsync.js');
 const { isValidUser } = require('./utils/middleware.js');
 const { isValidTransaction } = require('./utils/middleware.js');
-const { initiateTransaction, initiateDummyTransaction, showTransactions } = require('./controllers/transaction');
+const { initiateTransaction, initiateDummyTransaction, showTransactions, verifyUser } = require('./controllers/transaction');
 const mongooseSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const ExpressError = require('./utils/error.js');
@@ -87,6 +87,8 @@ app.get('/logout', logout);
 app.get('/transactions', isLoggedIn, catchAsync(showTransactions))
 app.post('/transactions', isValidTransaction, catchAsync(initiateTransaction))
 app.post('/dummyaddtransaction', catchAsync(initiateDummyTransaction))
+
+app.post('/verify', catchAsync(verifyUser))
 
 app.all('*', (req, res) => {
     throw new ExpressError(404, 'Page not found');
